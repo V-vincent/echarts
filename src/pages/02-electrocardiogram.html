@@ -13,16 +13,16 @@
 
 </html>
 <script type="text/javascript">
-  var totalFlowRate = echarts.init(document.getElementById('totalFlowRate'));
-  var xAxisData = [];
-  var yAxisData = [];
-  for (var i = 500; i > 0; i--) {
+  let totalFlowRate = echarts.init(document.getElementById('totalFlowRate'));
+  let xAxisData = [];
+  let yAxisData = [];
+  for (let i = 500; i > 0; i--) {
     xAxisData.push(i + "秒前");
   }
-  for (i = 1; i < 501; i++) {
+  for (let i = 1; i < 501; i++) {
     yAxisData.push(Math.round(Math.random() * 1000));
   }
-  var totalFlowRateOption = {
+  let totalFlowRateOption = {
     animation: false,
     title: {
       text: '总流量（kbps）'

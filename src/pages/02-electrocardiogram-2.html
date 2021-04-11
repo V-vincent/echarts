@@ -13,23 +13,22 @@
 
 </html>
 <script type="text/javascript">
-  var totalFlowRate = echarts.init(document.getElementById('totalFlowRate'));
-  var xAxisData = [];
-  var yAxisData = [];
-  for (var i = 100; i > 0; i--) {
+  let totalFlowRate = echarts.init(document.getElementById('totalFlowRate'));
+  let xAxisData = [];
+  let yAxisData = [];
+  for (let i = 100; i > 0; i--) {
     xAxisData.push(i + "秒前");
   }
-  for (i = 1; i < 101; i++) {
+  for (let i = 1; i < 101; i++) {
     yAxisData.push(Math.round(Math.random() * 1000));
   }
   setInterval(function () {
     yAxisData.push(Math.round(Math.random() * 1000));
     yAxisData.shift();
-    var totalFlowRateOption = {
+    let totalFlowRateOption = {
       animation: false,
       title: {
-        text: '总流量（kbps）'/*,
-                 left:"110px"*/
+        text: '总流量（kbps）',
       },
       tooltip: {
         trigger: 'axis',
@@ -38,30 +37,30 @@
         }
       },
       grid: {
-        left: 50/*"50px"*/,
-        right: 15/*"15px"*/
+        left: 50,
+        right: 15
       },
       legend: {
         data: ['当前流量'],
-        textStyle: { color: "#66b3ff" }/*图例(legend)说明文字的颜色*/
+        textStyle: { color: "#66b3ff" } /* 图例(legend)说明文字的颜色 */
       },
       xAxis: {
         boundaryGap: false,
         data: xAxisData,
-        splitLine: { show: true }/*网格线*/
+        splitLine: { show: true } /* 网格线 */
       },
       yAxis: {
         boundaryGap: false,
-        splitLine: { show: true }/*网格线*/
+        splitLine: { show: true }/* 网格线 */
       },
       series: {
-        /*itemStyle: {normal: {areaStyle: {type: 'default'}}},*/
+        /* itemStyle: {normal: {areaStyle: {type: 'default'}}}, */
         itemStyle: {
           normal: {
             lineStyle: {
-              color: '#92c2ff'/*折线的颜色*/
+              color: '#92c2ff'/* 折线的颜色 */
             },
-            color: "#66b3ff"/*图例(legend)的颜色,不是图例说明文字的颜色*/
+            color: "#66b3ff"/* 图例(legend)的颜色,不是图例说明文字的颜色 */
           }
         },
         areaStyle: {
@@ -76,7 +75,7 @@
             )
           }
         },
-        symbol: "none",/*去掉小圆点*/
+        symbol: "none", /* 去掉小圆点 */
         name: '当前流量',
         type: 'line',
         data: yAxisData
