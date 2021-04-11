@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Echarts实现心电图效果</title>
+  <script src="../../node_modules/echarts/dist/echarts.min.js"></script>
+</head>
+
+<body>
+  <div id="totalFlowRate" style="height:300px;"></div>
+</body>
+
+</html>
+<script type="text/javascript">
+  var totalFlowRate = echarts.init(document.getElementById('totalFlowRate'));
+  var xAxisData = [];
+  var yAxisData = [];
+  for (var i = 500; i > 0; i--) {
+    xAxisData.push(i + "秒前");
+  }
+  for (i = 1; i < 501; i++) {
+    yAxisData.push(Math.round(Math.random() * 1000));
+  }
+  var totalFlowRateOption = {
+    animation: false,
+    title: {
+      text: '总流量（kbps）'
+    },
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'cross'
+      }
+    },
+    grid: {
+      left: 50, /*"50px"*/
+      right: 15 /*"15px"*/
+    },
+    legend: {
+      data: ['当前流量']
+    },
+    xAxis: {
+      boundaryGap: false,
+      data: xAxisData
+    },
+    yAxis: {
+      boundaryGap: false
+    },
+    series: {
+      symbol: "none", /*去掉小圆点*/
+      name: '当前流量',
+      type: 'line',
+      itemStyle: {
+        normal: {
+          lineStyle: {
+            width: 2, // 折线宽度
+            color: "#FF0000" // 折线颜色
+          }
+        }
+      },
+      data: yAxisData,
+      smooth: true, // 0-1之间的数字或true或false，显示为平滑的曲*/
+    }
+  };
+  totalFlowRate.setOption(totalFlowRateOption);
+  setInterval(function () {
+    yAxisData.push(Math.round(Math.random() * 1000));
+    yAxisData.shift();
+    totalFlowRate.setOption(totalFlowRateOption);
+  }, 1000);
+</script>
