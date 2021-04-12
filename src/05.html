@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>折线图+柱形图</title>
+  <script src="../node_modules/echarts/dist/echarts.min.js"></script>
+</head>
+
+<body>
+  <div id="main" style="width: 600px;height:400px;background: #010c16;"></div>
+</body>
+
+</html>
+<script>
+  initChart();
+
+  function initChart() {
+    let myChart = echarts.init(document.getElementById('main'));
+    let chartData = [{
+      "ljhs": 191398,
+      "tjsj": "202004",
+      "tb": 0.9218,
+      "tjsjStr": 4
+    }, {
+      "ljhs": 206894,
+      "tjsj": "202005",
+      "tb": 0.9765,
+      "tjsjStr": 5
+    }, {
+      "ljhs": 220458,
+      "tjsj": "202006",
+      "tb": 1.0163,
+      "tjsjStr": 6
+    }, {
+      "ljhs": 239003,
+      "tjsj": "202007",
+      "tb": 1.0713,
+      "tjsjStr": 7
+    }, {
+      "ljhs": 254548,
+      "tjsj": "202008",
+      "tb": 1.0812,
+      "tjsjStr": 8
+    }, {
+      "ljhs": 274575,
+      "tjsj": "202009",
+      "tb": 1.1114,
+      "tjsjStr": 9
+    }, {
+      "ljhs": 289243,
+      "tjsj": "202010",
+      "tb": 1.0891,
+      "tjsjStr": 10
+    }, {
+      "ljhs": 309148,
+      "tjsj": "202011",
+      "tb": 1.1335,
+      "tjsjStr": 11
+    }, {
+      "ljhs": 313119,
+      "tjsj": "202012",
+      "tb": 1.1335,
+      "tjsjStr": 12
+    }];
+    let xAxisData = [];
+    let hdhsData = [];
+    let tbData = [];
+    let yTrickNum = 10000;
+    let yaixsName = "户数(万户)";
+
+    chartData.map((item) => {
+      xAxisData.push((item.tjsj.substring(4) * 1).toString() + "月");
+      hdhsData.push({
+        value: item.ljhs,
+        itemStyle: {
+          normal: {
+            barBorderRadius: [5, 5, 0, 0],
+          },
+        },
+        isThisYear: true,
+      });
+      tbData.push(item.tb ? item.tb : null);
+    })
+
+    const option = {
+      tooltip: {
+        trigger: "axis",
+        textStyle: {
+          fontSize: 18,
+        },
+        backgroundColor: "rgba(0,0,0,0.7)",
+        padding: [10, 15],
+        axisPointer: {
+          type: "shadow",
+          crossStyle: {
+            color: "#999",
+          },
+        },
+        formatter: function (arg) {
+          let str = "";
+          if (arg.length > 0) {
+            str = arg[0].name + "<br/>";
+            arg.map((item) => {
+              if (item.seriesIndex === 0) {
+                str += `核定户数：${item.value}户<br/>`;
+              } else if (item.seriesIndex === 1) {
+                if (item.value) {
+                  str += `同比：${(item.value * 100).toFixed(2)}%<br> `;
+                }
+              }
+            });
+          }
+          return str;
+        },
+      },
+      color: [
+        new echarts.graphic.LinearGradient(0, 1, 0, 0,
+          [{
+              offset: 0,
+              color: "#4b8fe3", // 0% 处的颜色
+            },
+            {
+              offset: 1,
+              color: "#6de1d0", // 100% 处的颜色
+            },
+          ],
+          false
+        ),
+      ],
+      legend: {
+        itemWidth: 15,
+        itemHeight: 15,
+        data: ["核定户数", "同比"],
+        textStyle: {
+          color: "#77c4f9",
+          fontSize: 16,
+        },
+        bottom: 15,
+      },
+      grid: {
+        left: 20,
+        right: 20,
+        top: "13%",
+        bottom: "14.5%",
+        containLabel: true,
+      },
+      xAxis: [{
+        type: "category",
+        data: xAxisData,
+        axisLabel: {
+          interval: 0,
+          color: "#528EB9",
+          fontSize: 16,
+          rotate: 45,
+        },
+        axisTick: {
+          show: false,
+        },
+        axisLine: {
+          lineStyle: {
+            color: "#356081",
+          },
+        },
+        axisPointer: {
+          type: "shadow",
+        },
+      }, ],
+      yAxis: [{
+          type: "value",
+          name: yaixsName,
+          nameTextStyle: {
+            fontSize: 16,
+          },
+          axisTick: {
+            show: false,
+          },
+          axisLine: {
+            lineStyle: {
+              color: "#528EB9",
+            },
+          },
+          splitLine: {
+            show: false,
+          },
+          axisLabel: {
+            fontSize: 16,
+            color: "#528EB9",
+            formatter(value, index) {
+              const res = value / yTrickNum;
+              return res;
+            },
+          },
+        },
+        {
+          type: "value",
+          name: "百分比(%)",
+          nameTextStyle: {
+            fontSize: 16,
+            align: "left",
+          },
+          splitLine: {
+            show: false,
+          },
+          axisTick: {
+            show: false,
+          },
+          axisLine: {
+            show: false,
+            lineStyle: {
+              color: "#528EB9",
+            },
+          },
+          axisLabel: {
+            fontSize: 16,
+            color: "#528EB9",
+            formatter(value, index) {
+              return value ? (value * 100).toFixed(1) + "%" : value;
+            },
+          },
+        },
+      ],
+      series: [{
+          name: "核定户数",
+          type: "bar",
+          data: hdhsData,
+          barWidth: '40%',
+        },
+        {
+          name: "同比",
+          type: "line",
+          symbol: "circle",
+          yAxisIndex: 1,
+          data: tbData,
+          itemStyle: {
+            color: "#f0c945",
+          },
+        },
+      ],
+    };
+
+    myChart.setOption(option, true);
+  }
+</script>
