@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>横向柱形图</title>
+  <script src="../node_modules/echarts/dist/echarts.min.js"></script>
+</head>
+
+<body>
+  <div id="main" style="width: 600px;height:400px;background: #010c16;"></div>
+</body>
+
+</html>
+<script>
+  initChart();
+
+  function initChart() {
+    let myChart = echarts.init(document.getElementById('main'));
+    let chartData = [{
+      "ynse": "14976187935.29",
+      "nsrmc": "中国石油化工股份有限公司茂名分公司"
+    }, {
+      "ynse": "13922368517.83",
+      "nsrmc": "中海油惠州石化有限公司"
+    }, {
+      "ynse": "13692691496.90",
+      "nsrmc": "中国石油化工股份有限公司广州分公司"
+    }, {
+      "ynse": "12324968412.56",
+      "nsrmc": "广东中烟工业有限责任公司"
+    }, {
+      "ynse": "7699152027.95",
+      "nsrmc": "广汽丰田汽车有限公司"
+    }, {
+      "ynse": "6921734756.24",
+      "nsrmc": "华为终端有限公司"
+    }, {
+      "ynse": "5544378641.22",
+      "nsrmc": "东风汽车有限公司东风日产乘用车公司"
+    }, {
+      "ynse": "4985618252.64",
+      "nsrmc": "广东烟草汕头市有限责任公司"
+    }, {
+      "ynse": "4888628709.54",
+      "nsrmc": "中科（广东）炼化有限公司"
+    }, {
+      "ynse": "4639933228.19",
+      "nsrmc": "广东中烟工业有限责任公司梅州卷烟厂"
+    }];
+    let ynseData = [];
+    let nsrmcData = [];
+    chartData.map((item) => {
+      ynseData.push(item.ynse);
+      nsrmcData.push(item.nsrmc);
+    })
+    const option = {
+      grid: {
+        left: "5%",
+        right: "5%",
+        top: "3.5%",
+        bottom: "5.5%",
+      },
+      tooltip: {
+        backgroundColor: "rgba(0,0,0,0.7)",
+        trigger: "item",
+        textStyle: {
+          fontSize: 18,
+        },
+        padding: [10, 15],
+        axisPointer: {
+          type: "shadow",
+          crossStyle: {
+            color: "#999",
+          },
+        },
+        formatter: function (arg) {
+          return `${arg.name}<br>应纳税额：${arg.value}元<br>`;
+        },
+        backgroundColor: "rgba(0,0,0,0.7)",
+      },
+      yAxis: [{
+        type: "category",
+        data: nsrmcData,
+        splitLine: {
+          // 去掉--显示分割线
+          show: false,
+        },
+        axisLabel: {
+          textStyle: {
+            color: "#66ABDF", // 坐标的字体颜色
+            fontSize: 16,
+          },
+          interval: 0,
+          align: "left",
+          padding: [0, 0, 150, 10],
+        },
+        axisTick: {
+          show: false,
+        },
+        axisLine: {
+          show: false,
+        },
+      }, ],
+      xAxis: [{
+        type: "value",
+        axisLine: {
+          show: false,
+          lineStyle: {
+            opacity: 0.2,
+          },
+        },
+        // interval: 5000,
+        axisTick: {
+          show: false,
+        },
+        splitLine: {
+          // 去掉--显示分割线
+          show: false,
+        },
+        axisLabel: {
+          show: false,
+        },
+      }, ],
+      series: [{
+        // name: "本期",
+        smooth: true,
+        type: "bar",
+        data: ynseData,
+        color: "#7D84E4",
+        barWidth: "24%",
+        showBackground: true,
+        // itemStyle: {
+        //   barBorderRadius: 2,
+        // },
+        itemStyle: {
+          normal: {
+            barBorderRadius: [0, 4, 4, 0],
+            color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                offset: 0,
+                color: "#6de0d0",
+              },
+              {
+                offset: 1,
+                color: "#4a8ce4",
+              },
+            ]),
+            label: {
+              show: true, // 开启显示
+              position: "left",
+              offset: [445, -12.5],
+              textStyle: {
+                // 数值样式
+                color: "#528EB9",
+                fontSize: 16,
+              },
+              formatter: function (arg) {
+                return `${arg.value}元`;
+              },
+            },
+          },
+        },
+      }, ],
+    };
+
+    myChart.setOption(option, true);
+  }
+</script>
