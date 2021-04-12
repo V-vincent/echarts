@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>圆环图</title>
+  <script src="../node_modules/echarts/dist/echarts.min.js"></script>
+</head>
+
+<body>
+  核定最高开票限额分布情况
+  <div id="main" style="width: 600px;height:400px;background: #010c16;"></div>
+</body>
+
+</html>
+<script>
+  initChart();
+
+  function initChart() {
+    let myChart = echarts.init(document.getElementById('main'));
+    let pieData = [];
+    let legendData = [];
+    let chartData = [{
+      "kpxe": "百元",
+      "ljhs": 11
+    }, {
+      "kpxe": "一千元",
+      "ljhs": 1055
+    }, {
+      "kpxe": "一万元",
+      "ljhs": 63048
+    }, {
+      "kpxe": "十万元",
+      "ljhs": 247677
+    }, {
+      "kpxe": "一百万元",
+      "ljhs": 1287
+    }, {
+      "kpxe": "一千万元",
+      "ljhs": 51
+    }, {
+      "kpxe": "一亿元",
+      "ljhs": 5
+    }, {
+      "kpxe": "十亿元",
+      "ljhs": 1
+    }];
+    chartData.map((item) => {
+      pieData.push({
+        value: item.ljhs,
+        name: item.kpxe,
+      });
+      legendData.push(item.kpxe);
+    })
+    const option = {
+      tooltip: {
+        backgroundColor: "rgba(0,0,0,0.7)",
+        trigger: "item",
+        textStyle: {
+          fontSize: 18,
+        },
+        axisPointer: {
+          type: "shadow",
+          crossStyle: {
+            color: "#999",
+          },
+        },
+        padding: [10, 15],
+        formatter(arg) {
+          return `${arg.name}<br>核定户次：${arg.value}户次<br>占比：${arg.percent}%<br>`;
+        },
+      },
+      legend: {
+        itemWidth: 15,
+        itemHeight: 15,
+        bottom: 15,
+        data: legendData,
+        width: "70%",
+        formatter: function (name) {
+          var arr = ["{b|" + name + "}"];
+          return arr.join("\n");
+        },
+        textStyle: {
+          color: "#77c4f9",
+          fontSize: 16,
+          rich: {
+            b: {
+              color: "#77c4f9",
+              fontSize: 16,
+              width: 75,
+            },
+          },
+        },
+      },
+      color: [
+        "#df6c69",
+        "#698df7",
+        "#69bef9",
+        "#4db6ac",
+        "#9dcf65",
+        "#ffab40",
+        "#f8d263",
+        "#B58DEE",
+      ],
+      series: [{
+        name: "",
+        type: "pie",
+        center: ["50%", "40%"],
+        radius: ["50%", "62%"],
+        minAngle: 8,
+        avoidLabelOverlap: false,
+        emphasis: {
+          label: {
+            show: true,
+            fontSize: "30",
+            fontWeight: "bold",
+          },
+          itemStyle: {
+            borderWidth: 3,
+          },
+        },
+        labelLine: {
+          show: false,
+        },
+        itemStyle: {
+          borderColor: "#20190d",
+          borderWidth: 1,
+          borderType: "solid",
+        },
+        data: pieData,
+        label: {
+          normal: {
+            show: false,
+            position: "center",
+            formatter: function name() {
+              return "";
+            },
+          },
+        },
+      }, ],
+    };
+    myChart.setOption(option, true);
+  }
+</script>
