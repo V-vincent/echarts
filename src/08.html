@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>四分之三圆环图</title>
+  <script src="../node_modules/echarts/dist/echarts.min.js"></script>
+</head>
+
+<body>
+  <div id="main" style="width: 600px;height:400px;background: #010c16;"></div>
+</body>
+
+</html>
+<script>
+  initChart();
+
+  function initChart() {
+    let chartData = [{
+      "zspm_dm": "0100",
+      "gssbrs": 40989615,
+      "zspmmc": "工资薪金所得",
+      "zb": 0.8573,
+      "tb": 0.0319
+    }, {
+      "zspm_dm": "0400",
+      "gssbrs": 3734847,
+      "zspmmc": "劳务报酬所得",
+      "zb": 0.0781,
+      "tb": -0.0794
+    }, {
+      "zspm_dm": "0700",
+      "gssbrs": 1645724,
+      "zspmmc": "利息,股息,红利所得",
+      "zb": 0.0344,
+      "tb": -0.0129
+    }, {
+      "zspm_dm": "0200",
+      "gssbrs": 914296,
+      "zspmmc": "经营所得",
+      "zb": 0.0191,
+      "tb": -0.0442
+    }, {
+      "zspm_dm": "1000",
+      "gssbrs": 296057,
+      "zspmmc": "偶然所得",
+      "zb": 0.0062,
+      "tb": -0.3350
+    }, {
+      "zspm_dm": "0900",
+      "gssbrs": 170074,
+      "zspmmc": "财产转让所得",
+      "zb": 0.0036,
+      "tb": 0.1179
+    }, {
+      "zspm_dm": "0500",
+      "gssbrs": 47630,
+      "zspmmc": "稿酬所得",
+      "zb": 0.0010,
+      "tb": -0.0533
+    }, {
+      "zspm_dm": "0800",
+      "gssbrs": 11242,
+      "zspmmc": "财产租赁所得",
+      "zb": 0.0002,
+      "tb": -0.1648
+    }, {
+      "zspm_dm": "0600",
+      "gssbrs": 2515,
+      "zspmmc": "特许权使用费所得",
+      "zb": 0.0001,
+      "tb": -0.7226
+    }, {
+      "zspm_dm": "9902",
+      "gssbrs": 16,
+      "zspmmc": "综合所得自行申报",
+      "zb": 0.0000,
+      "tb": -1.0000
+    }];
+    let colors = [
+      "#df6c69",
+      "#2aaaef",
+      "#d7ab82",
+      "#bd88f5",
+      "#698df7",
+      "#69bef9",
+      "#9dcf65",
+      "#009db2",
+      "#ffca62",
+      "#f9f48a",
+      "#dd6d6b",
+      "#fec96a",
+      "#6b8ff4",
+      "#34abec",
+      "#d6aa84",
+      "#bc8bf2",
+      "#189db0",
+      "#6dbff6",
+    ];
+    let resData = chartData.reverse();
+
+    const placeHolderStyle = {
+      normal: {
+        label: {
+          show: false,
+          position: "outside",
+        },
+        labelLine: {
+          show: false,
+          length: 100,
+          smooth: 0.5,
+        },
+        borderWidth: 10,
+        borderColor: "#101a3a",
+      },
+    };
+    const placeHolderStyle1 = {
+      normal: {
+        label: {
+          show: false,
+          position: "outside",
+        },
+        labelLine: {
+          show: false,
+          length: 100,
+          smooth: 0.5,
+        },
+        borderWidth: 10,
+        borderColor: "transparent",
+      },
+    };
+    let pieData = [];
+    let seriesData = [];
+    let legendData = [];
+    resData.map((item) => {
+      legendData.push(item.zspmmc);
+      pieData.push({
+        value: item.zb,
+        name: item.zspmmc,
+        ...item,
+      });
+    });
+
+    pieData.map((item, index) => {
+      seriesData.push({
+        name: item.name,
+        type: "pie",
+        roundCap: true,
+        clockWise: true, // 顺时加载
+        hoverAnimation: false, // 鼠标移入变大
+        radius: [13 * (index + 1), 13 * (index + 1)],
+        center: ["50%", "36%"],
+        itemStyle: {
+          normal: {
+            label: {
+              show: false,
+            },
+            labelLine: {
+              show: false,
+              length: 100,
+              smooth: 0.5,
+            },
+            borderWidth: 10,
+            shadowBlur: 40,
+            borderColor: colors[index],
+            shadowColor: "rgba(0, 0, 0, 0)", // 边框阴影
+          },
+        },
+        data: [{
+            ...item,
+            value: Number(item.value) < (50 + index * 10) / 360 ?
+              Number((50 + index * 10) / 360) : 0.75 * Number(item.value),
+          },
+          {
+            ...item,
+            value: Number(item.value) < (50 + index * 10) / 360 ?
+              Number(0.75) - Number((50 + index * 10) / 360) : Number(0.75) - Number(0.75 * Number(item
+                .value)),
+            itemStyle: {
+              ...placeHolderStyle,
+              color: colors[index],
+            },
+          },
+          {
+            value: 0.25,
+            itemStyle: placeHolderStyle1,
+            tooltip: {
+              show: false,
+            },
+          },
+        ],
+      });
+    });
+
+    let myChart = echarts.init(document.getElementById('main'));
+    let option = {
+      tooltip: {
+        backgroundColor: "rgba(0,0,0,0.7)",
+        padding: [10, 15],
+        trigger: "item",
+        formatter: function (params) {
+          // console.log("params", params);
+          let result =
+            '<span style="font-size:18px;color:#FFFFFF">' +
+            params.data.name +
+            "</span></br>";
+          result += params.data.gssbrs ?
+            '<span style="font-size:16px;color:#FFFFFF">' +
+            "申报人数：" + params.data.gssbrs +
+            "人</span></br>" :
+            "";
+          result += params.data.tb ?
+            '<span style="font-size:16px;color:#FFFFFF">' +
+            "同比：" +
+            (params.data.tb * 100).toFixed(2) +
+            "%</span></br>" :
+            "";
+          result += params.data.zb === 0 || params.data.zb ?
+            '<span style="font-size:16px;color:#FFFFFF">' +
+            "占比：" +
+            (params.data.zb * 100).toFixed(2) +
+            "%</span></br>" :
+            "";
+          return result;
+        },
+      },
+      legend: {
+        orient: "horizontal",
+        left: "center",
+        bottom: 10,
+        width: "80%",
+        data: legendData,
+        textStyle: {
+          fontFamily: "微软雅黑",
+          color: "#77C4F9",
+          fontSize: 14,
+        },
+        itemWidth: 15,
+        itemHeight: 15,
+      },
+      color: colors,
+      series: seriesData,
+    };
+    myChart.setOption(option, true);
+  }
+</script>
